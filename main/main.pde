@@ -1,10 +1,10 @@
 //Commented lines to execute with Java. Uncomment to execute on Android device
-//import ketai.sensors.*;
+import ketai.sensors.*;
 
 //PVector contains x, y, z components
-PVector player, enemy, ball;
+PVector player, enemy, ball, teleporter, teleporter2;
 
-float ballSpeedX, ballSpeedY, enemySpeed;
+float ballSpeedX, ballSpeedY, teleporterSpeedX, teleporterSpeedY, teleporter2SpeedX, teleporter2SpeedY, enemySpeed;
 
 int playerScore = 0;
 int enemyScore = 0;
@@ -15,8 +15,9 @@ PVector playerColor = new PVector(0, 200, 0);
 PVector enemyColor = new PVector(200, 0, 0);
 
 
+
 //Commented lines to execute with Java. Uncomment to execute on Android device
-//KetaiSensor sensor;
+KetaiSensor sensor;
 float accelerometerX, accelerometerY, accelerometerZ;
 
 void setup()
@@ -29,10 +30,20 @@ void setup()
     ball = new PVector(width/2, height/2);
     player = new PVector(width, height/2);
     enemy = new PVector(0, height/2);
+    teleporter = new PVector(0, 0);
+    teleporter2 = new PVector(0, 0);
     
 
     ballSpeedX = width/100;
     ballSpeedY = width/100;
+    
+    ballSpeedX = width/100;
+    ballSpeedY = width/100;
+    
+    teleporterSpeedX = width/1200;
+    teleporterSpeedY = width/1200;
+    teleporter2SpeedX = width/600;
+    teleporter2SpeedY = width/500;
     
     
     enemySpeed = width/150;
@@ -40,8 +51,8 @@ void setup()
     ballSize = width/20;
     
     //Commented lines to execute with Java. Uncomment to execute on Android device
-    //sensor = new KetaiSensor(this);
-    //sensor.start();
+    sensor = new KetaiSensor(this);
+    sensor.start();
     
     rectMode(CENTER);
       
@@ -50,7 +61,32 @@ void setup()
 void drawTeleporter()
 {
   
-  println("Teleporter Drawn");
+   
+   int greenColor = (int)((teleporter.y/width) * 255);
+   int redColor = (int)((teleporter.x/width) * 255);
+   
+   stroke(redColor,greenColor,0);
+   ellipse(teleporter.x, teleporter.y, width/20, width/20);
+   
+   teleporter.x += teleporterSpeedX;
+   teleporter.y += teleporterSpeedY;
+   
+   teleporterBoundary();
+}
+
+void drawTeleporter2()
+{
+  
+   
+   int blueColor = (int)((teleporter.x/width) * 255);
+   
+   stroke(0,0,blueColor);
+   ellipse(teleporter2.x, teleporter2.y, width/20, width/20);
+   
+   teleporter2.x += teleporter2SpeedX;
+   teleporter2.y += teleporter2SpeedY;
+   
+   teleporter2Boundary();
 }
 
 void draw()
@@ -64,12 +100,15 @@ void draw()
     drawEnemy();
     scoreText();
     drawTeleporter();    
+    drawTeleporter2();
+    teleporterLogic();
+    
     //Prints accelerometer stats
-    //println("-------");
-    //println("X: " + accelerometerX);
-    //println("Y: " + accelerometerY);
-    //println("Z: " + accelerometerZ);
-    //println("-------");
+    println("-------");
+    println("X: " + accelerometerX);
+    println("Y: " + accelerometerY);
+    println("Z: " + accelerometerZ);
+    println("-------");
 }
 
 void drawBall()
@@ -128,6 +167,80 @@ void ballBoundary()
     
     
  
+}
+
+
+void teleporterBoundary()
+{
+   //top
+   if (teleporter.y < 0) {
+      teleporter.y = 0;
+      teleporterSpeedY *= -1; 
+   }
+  
+   //bottom
+   if (teleporter.y > height) {
+      teleporter.y = height;
+      teleporterSpeedY *= -1; 
+   }
+
+    //ball.dist(player);
+    
+    if (teleporter.x > width) {
+       teleporter.x = width;
+       teleporterSpeedX *= -1;
+      
+    }
+    
+    if (teleporter.x < 0) {
+       teleporter.x = 0; 
+       teleporterSpeedX *= -1;
+    }
+    
+    
+ 
+}
+
+void teleporter2Boundary()
+{
+   //top
+   if (teleporter2.y < 0) {
+      teleporter2.y = 0;
+      teleporter2SpeedY *= -1; 
+   }
+  
+   //bottom
+   if (teleporter2.y > height) {
+      teleporter2.y = height;
+      teleporter2SpeedY *= -1; 
+   }
+
+    //ball.dist(player);
+    
+    if (teleporter2.x > width) {
+       teleporter2.x = width;
+       teleporter2SpeedX *= -1;
+      
+    }
+    
+    if (teleporter2.x < 0) {
+       teleporter2.x = 0; 
+       teleporter2SpeedX *= -1;
+    }
+    
+    
+ 
+}
+
+void teleporterLogic()
+{
+  if(abs(ball.x - teleporter.x) < width/19 && abs(ball.y - teleporter.y) < width/19)
+  {
+    ball.x = teleporter2.x;
+    ball.y = teleporter2.y;
+  }
+  
+
 }
 
 void drawPlayer()
@@ -193,14 +306,7 @@ void onAccelerometerEvent(float x, float y, float z)
 
 void centerLine()
 {
-   int numberOfLines = 20;
-  
-   for (int i = 0; i < numberOfLines; i++) {
-     strokeWeight(width/100);
-     stroke(255);
-     line(width/2, i * width/numberOfLines, width/2, (i+1) * width/numberOfLines - width/40);
-     stroke(0, 0);
-     line(width/2, (i+1) * width/numberOfLines - width/40, width/2, (i+1) * width/numberOfLines);
-     
-   }
+   strokeWeight(width/120);
+   stroke(255);
+   line(width/2,  0, width/2, height);
 }
