@@ -40,10 +40,10 @@ void setup()
     ballSpeedX = width/100;
     ballSpeedY = width/100;
     
-    teleporterSpeedX = width/1200;
-    teleporterSpeedY = width/1200;
-    teleporter2SpeedX = width/600;
-    teleporter2SpeedY = width/500;
+    teleporterSpeedX = width/200;
+    teleporterSpeedY = width/200;
+    teleporter2SpeedX = width/400;
+    teleporter2SpeedY = width/400;
     
     
     enemySpeed = width/150;
@@ -68,8 +68,21 @@ void drawTeleporter()
    stroke(redColor,greenColor,0);
    ellipse(teleporter.x, teleporter.y, width/20, width/20);
    
-   teleporter.x += teleporterSpeedX;
-   teleporter.y += teleporterSpeedY;
+   if (accelerometerY > 1) {
+     teleporter.x += teleporterSpeedX;
+   }
+   else if (accelerometerY < -1) {
+     teleporter.x -= teleporterSpeedX;
+   }
+   if (accelerometerX > 6.5) {
+     teleporter.y += teleporterSpeedY;
+   }
+   else if (accelerometerX < 5.5) {
+     teleporter.y -= teleporterSpeedY;
+   }
+   
+   
+   
    
    teleporterBoundary();
 }
@@ -83,9 +96,19 @@ void drawTeleporter2()
    stroke(0,0,blueColor);
    ellipse(teleporter2.x, teleporter2.y, width/20, width/20);
    
-   teleporter2.x += teleporter2SpeedX;
-   teleporter2.y += teleporter2SpeedY;
    
+   if (accelerometerY > 1) {
+     teleporter2.x += teleporter2SpeedX;
+   }
+   else if (accelerometerY < -1) {
+     teleporter2.x -= teleporter2SpeedX;
+   }
+   if (accelerometerX > 6.5) {
+     teleporter2.y += teleporter2SpeedY;
+   }
+   else if (accelerometerX < 5.5) {
+     teleporter2.y -= teleporter2SpeedY;
+   }
    teleporter2Boundary();
 }
 
@@ -175,26 +198,26 @@ void teleporterBoundary()
    //top
    if (teleporter.y < 0) {
       teleporter.y = 0;
-      teleporterSpeedY *= -1; 
+      //teleporterSpeedY *= -1; 
    }
   
    //bottom
    if (teleporter.y > height) {
       teleporter.y = height;
-      teleporterSpeedY *= -1; 
+      //teleporterSpeedY *= -1; 
    }
 
     //ball.dist(player);
     
     if (teleporter.x > width) {
        teleporter.x = width;
-       teleporterSpeedX *= -1;
+       //teleporterSpeedX *= -1;
       
     }
     
     if (teleporter.x < 0) {
        teleporter.x = 0; 
-       teleporterSpeedX *= -1;
+       //teleporterSpeedX *= -1;
     }
     
     
@@ -206,26 +229,26 @@ void teleporter2Boundary()
    //top
    if (teleporter2.y < 0) {
       teleporter2.y = 0;
-      teleporter2SpeedY *= -1; 
+      //teleporter2SpeedY *= -1; 
    }
   
    //bottom
    if (teleporter2.y > height) {
       teleporter2.y = height;
-      teleporter2SpeedY *= -1; 
+      //teleporter2SpeedY *= -1; 
    }
 
     //ball.dist(player);
     
     if (teleporter2.x > width) {
        teleporter2.x = width;
-       teleporter2SpeedX *= -1;
+       //teleporter2SpeedX *= -1;
       
     }
     
     if (teleporter2.x < 0) {
        teleporter2.x = 0; 
-       teleporter2SpeedX *= -1;
+       //teleporter2SpeedX *= -1;
     }
     
     
